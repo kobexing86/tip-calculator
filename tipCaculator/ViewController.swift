@@ -213,11 +213,12 @@ var activityIndicator:UIActivityIndicatorView!
         let tesseract = G8Tesseract()
         tesseract.language = "eng+fra"
         tesseract.engineMode = .TesseractCubeCombined
+        tesseract.charWhitelist = "01234567890"
         tesseract.pageSegmentationMode = .Auto
         tesseract.maximumRecognitionTime = 60.0
         tesseract.image = image.g8_blackAndWhite()
         tesseract.recognize()
-        billAmt.text = tesseract.recognizedText
+        billAmt.text = keepOnlyNumFromString(tesseract.recognizedText)
         removeActivityIndicator()
         onEndEditingBill(ViewController)
     }
@@ -307,6 +308,7 @@ var activityIndicator:UIActivityIndicatorView!
             
             if error != nil {
                 print("error=\(error)")
+                self.showAlertWithTitleAndMsg("sorry", message: "error=\(error!.localizedDescription)")
                 return
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
@@ -324,6 +326,11 @@ var activityIndicator:UIActivityIndicatorView!
         
         task.resume()
         
+    }
+    func keepOnlyNumFromString(text: String) -> String {
+        let okayChars : Set<Character> =
+        Set("1234567890.".characters)
+        return String(text.characters.filter {okayChars.contains($0) })
     }
 
 }
