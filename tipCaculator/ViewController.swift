@@ -12,11 +12,13 @@ import LocalAuthentication
 class ViewController: UIViewController,UINavigationControllerDelegate {
 var activityIndicator:UIActivityIndicatorView!
     @IBOutlet weak var scanButton: UIButton!
+    @IBOutlet weak var submitTR: UIButton!
     @IBOutlet weak var signOnBtn: UIButton!
     @IBOutlet weak var tipRate: UITextField!
     @IBOutlet weak var billAmt: UITextField!
     @IBOutlet weak var totalAmt: UILabel!
     @IBOutlet weak var tipAmt: UILabel!
+    let defaults = NSUserDefaults.standardUserDefaults()
     @IBAction func onEndEditingBill(sender: AnyObject) {
         if var ba = billAmt.text, let tr=tipRate.text {
             ba=ba.stringByTrimmingCharactersInSet(
@@ -60,6 +62,7 @@ var activityIndicator:UIActivityIndicatorView!
                     self.signOnBtn.hidden=true
                     self.billAmt.enabled = true
                     self.tipRate.enabled = true
+                    self.submitTR.hidden=false
                     }
                     self.showAlertWithTitleAndMsg("Congrats", message: "You are signed in and please enjoy the app")
                     
@@ -167,7 +170,11 @@ var activityIndicator:UIActivityIndicatorView!
         scanButton.hidden=true
         billAmt.enabled = false;
         tipRate.enabled = false;
+        submitTR.hidden=true;
           self.addDoneButtonOnKeyboard()
+        if let avgTR = defaults.stringForKey("avgTR") {
+           tipRate.text=avgTR
+        }
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -257,10 +264,66 @@ var activityIndicator:UIActivityIndicatorView!
         
     }
     
+    @IBAction func onSubmitTR(sender: AnyObject) {
+        if billAmt.text == "0" {
+           self.showAlertWithTitleAndMsg("O bill amount detected", message: "Please submit a real bill for tracking your tipping habbit")
+            return
+        }
+        let uuid:String = UIDevice.currentDevice().identifierForVendor!.UUIDString
+        let dataPost :String="userid=\(uuid)&tr=\(tipRate.text!)"
+        let endPoint : String =  "http://localhost:8080/user/addTR"
+        request(dataPost, endpoint: endPoint, successHandler: {
+            (response) in
+            if response != "error"{
+            //self.tipRate.text = response;
+             self.defaults.setObject(response, forKey: "avgTR")
+                if let avgTR = self.defaults.stringForKey("avgTR")
+                {
+                    let delaytime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+                    
+                    dispatch_after(delaytime,dispatch_get_main_queue()){
+                        self.tipRate.text = avgTR
+                    }
+                }
+                
+            }
+            else{
+                //TODO
+            }
+        });
+    }
     func doneButtonAction()
     {
         self.billAmt.resignFirstResponder()
         self.tipRate.resignFirstResponder()
+    }
+    func request(data : String, endpoint : String, successHandler: (response: String) -> Void){
+        let request = NSMutableURLRequest(URL: NSURL(string: endpoint as String)!)
+        request.HTTPMethod = "POST"
+        let postString = data
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil {
+                print("error=\(error)")
+                return
+            }
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+            }
+            
+            let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            
+            //self.result = responseString as String!
+            successHandler(response:responseString as String!);
+            return
+            
+        }
+        
+        task.resume()
+        
     }
 
 }

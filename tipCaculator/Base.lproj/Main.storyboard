@@ -178,10 +178,22 @@
                                     <action selector="onClickSignon:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tPe-Xn-le2"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nk9-fE-8bf">
+                                <rect key="frame" x="180" y="369" width="237" height="109"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Submit tip habbit">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onSubmitTR:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HA7-vw-cII"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="nk9-fE-8bf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="0tG-4O-VbK"/>
                             <constraint firstItem="pl3-mC-mfO" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="42" id="9Lk-7d-11p"/>
                             <constraint firstItem="pl3-mC-mfO" firstAttribute="top" secondItem="JeC-Fr-Xla" secondAttribute="bottom" constant="21" id="A9O-Xj-ZIU"/>
                             <constraint firstItem="8dr-Dc-kT7" firstAttribute="top" secondItem="Zss-eK-eNE" secondAttribute="bottom" constant="44" id="BB1-pj-s5s"/>
@@ -209,12 +221,14 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ZoE-dt-f8j" secondAttribute="bottom" id="rwt-0e-aNn"/>
                             <constraint firstItem="Qkm-KN-k82" firstAttribute="top" secondItem="sZn-Tx-hiO" secondAttribute="bottom" constant="30" id="vNd-DE-OSs"/>
                             <constraint firstAttribute="trailingMargin" secondItem="pl3-mC-mfO" secondAttribute="trailing" constant="40" id="wNr-7A-t92"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="nk9-fE-8bf" secondAttribute="bottom" constant="150" id="xxW-ZQ-fx6"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="billAmt" destination="M9a-XT-S8u" id="2pq-Xt-UgX"/>
                         <outlet property="scanButton" destination="JFd-CA-Sho" id="Wuj-9b-bZj"/>
                         <outlet property="signOnBtn" destination="A2p-HB-o4Z" id="Web-xa-5ra"/>
+                        <outlet property="submitTR" destination="nk9-fE-8bf" id="BPI-fr-5aB"/>
                         <outlet property="tipAmt" destination="Zh0-ok-Wfs" id="XeJ-wi-5U9"/>
                         <outlet property="tipRate" destination="uNN-Ev-KzX" id="0RR-kA-CMd"/>
                         <outlet property="totalAmt" destination="F6g-HW-Eid" id="gz8-pp-Q4C"/>
